@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  # CARP FastAPI
+  carp_client-fastapi:
+    # Container name
+    container_name: carp_client-fastapi
+    # Always restart the service
+    restart: always
+    # Build the carp_fast_api service using the Dockerfile
+    build: ./
+    # Environment variables
+    environment:
+      - APP_NAME=carp_client-fastapi
+    volumes:
+      - .:/app
+    ports:
+      - 80:8000
+
