@@ -11,8 +11,6 @@ Y
 )carp_fastapi/api/routers/auth/__init__.py,2/7/2710bfabc9dbf24be6225999576f4b58dfb8fef5
 c
 3carp_fastapi/api/routers/services/carp_summaries.py,8/f/8f019ff977546be168e905243d7afb170bfa0c2f
-9
-	README.md,8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 :
 
 LICENCE.md,0/7/07a03b25588518b2a609dbe824fc503edb628a4a
