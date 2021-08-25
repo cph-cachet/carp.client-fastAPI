@@ -13,6 +13,7 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 
+import postman
 from carp_fastapi.errors.carp_http_error import http_error_handler
 from carp_fastapi.errors.carp_validation_error import http422_error_handler
 from carp_fastapi.config.carp_configuration import DEBUG, VERSION, PROJECT_NAME, API_PREFIX, ALLOWED_HOSTS
@@ -23,8 +24,8 @@ def get_application() -> FastAPI:
     application = FastAPI(
         title=PROJECT_NAME,
         debug=DEBUG,
-        version=VERSION
-        #openapi_url=f"{postmant}/carp_api.json"
+        version=VERSION,
+        openapi_url="/postman/carp_api.json"
     )
 
     application.add_middleware(

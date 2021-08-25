@@ -13,7 +13,15 @@ from fastapi import APIRouter, Request
 from carp import account_service as account
 from carp_fastapi.resources import carp_environment as env
 
+from starlette.config import Config
+config = Config(".env")
+environment: str = config("ENVIRONMENT", default="local")
+
 router = APIRouter()
+
+"""
+ACCOUNTS
+"""
 
 
 @router.post("/{role}")
@@ -22,13 +30,13 @@ async def invite_account(request: Request, role_param: str):
     Endpoint: [invite_account]
     :param request: The [request] body.
     :param role_param: The role to assign the account.
-        i.e. roles: PARTICIPANT, STUDY_OWNER
+        i.e. roles: STUDY_OWNER
     :return: This request doesn't return a response body.
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
     access_token = request.headers['authorization']
-    response = await account.invite_user(env.BASE_URL["production"],
+    response = await account.invite_user(env.BASE_URL[environment],
                                          access_token=access_token,
                                          email_address=request_body,
                                          role=role_param)
@@ -45,7 +53,7 @@ async def unlock_account(request: Request):
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
     access_token = request.headers['authorization']
-    response = await account.unlock_account(env.BASE_URL["production"],
+    response = await account.unlock_account(env.BASE_URL[environment],
                                             access_token=access_token,
                                             email_body=request_body)
     return response
@@ -61,7 +69,7 @@ async def get_studies_for_researcher_accounts(request: Request, account_id: str)
     :return: This request doesn't return a response request_body.
     """
     access_token = request.headers['authorization']
-    response = await account.get_studies_for_researcher(env.BASE_URL["production"],
+    response = await account.get_studies_for_researcher(env.BASE_URL[environment],
                                                         access_token=access_token,
                                                         account_id=account_id)
     return response

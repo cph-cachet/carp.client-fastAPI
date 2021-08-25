@@ -10,11 +10,17 @@ THE SOFTWARE IS PROVIDED ”AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 from fastapi import APIRouter, Request
 
 from carp_fastapi.resources import carp_environment as env
-
 from carp import account_service as accounts
+
+from starlette.config import Config
+config = Config(".env")
+environment: str = config("ENVIRONMENT", default="local")
 
 router = APIRouter()
 
+"""
+AUTHENTICATION | AUTHORIZATION
+"""
 
 @router.post("/token")
 async def login(request: Request):
@@ -24,7 +30,7 @@ async def login(request: Request):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await accounts.login(env.BASE_URL["production"], request=request_body)
+    response = await accounts.login(env.BASE_URL[environment], request=request_body)
     return response
 
 
@@ -36,6 +42,6 @@ async def refresh_token(request: Request):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await accounts.refresh_token(env.BASE_URL["production"], token=request_body)
+    response = await accounts.refresh_token(env.BASE_URL[environment], token=request_body)
     return response
 

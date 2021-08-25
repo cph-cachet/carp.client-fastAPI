@@ -12,7 +12,7 @@ import sys
 from typing import List
 from loguru import logger
 from starlette.config import Config
-from starlette.datastructures import CommaSeparatedStrings, Secret
+from starlette.datastructures import CommaSeparatedStrings
 
 from carp_fastapi.config.carp_loging import InterceptHandler
 

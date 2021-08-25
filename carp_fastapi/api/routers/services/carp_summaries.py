@@ -12,8 +12,11 @@ from fastapi import APIRouter, Request
 from carp import summary_service as summary
 from carp_fastapi.resources import carp_environment as env
 
-router = APIRouter()
+from starlette.config import Config
+config = Config(".env")
+environment: str = config("ENVIRONMENT", default="local")
 
+router = APIRouter()
 
 """
 SUMMARIES :: GET
@@ -28,7 +31,7 @@ async def create_summaries(request: Request, study_id: str):
     :param study_id: The [study_id].
     :return: The summary by it [studyId].
     """
-    response = await summary.create_summary(env.BASE_URL["production"],
+    response = await summary.create_summary(env.BASE_URL[environment],
                                             access_token=request.headers['authorization'],
                                             study_id=study_id)
     return response
@@ -41,7 +44,7 @@ async def get_all(request: Request):
     :param request: The [request] header.
     :return: All the summaries.
     """
-    response = await summary.create_summary(env.BASE_URL["production"],
+    response = await summary.create_summary(env.BASE_URL[environment],
                                             access_token=request.headers['authorization'])
     return response
 
@@ -54,7 +57,7 @@ async def download(request: Request, summary_id: str):
     :param request: The [request] header.
     :return: Download summary data requested.
     """
-    response = await summary.download_summaries(env.BASE_URL["production"],
+    response = await summary.download_summaries(env.BASE_URL[environment],
                                                 access_token=request.headers['authorization'],
                                                 summary_id=summary_id)
     return response
@@ -68,7 +71,7 @@ async def get_by_summary_id(request: Request, summary_id: str):
     :param request: The [request] header.
     :return: Get the summaries by its summary id.
     """
-    response = await summary.download_summaries(env.BASE_URL["production"],
+    response = await summary.download_summaries(env.BASE_URL[environment],
                                                 access_token=request.headers['authorization'],
                                                 summary_id=summary_id)
     return response

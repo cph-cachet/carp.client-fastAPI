@@ -9,28 +9,25 @@ THE SOFTWARE IS PROVIDED ”AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 """
 from fastapi import APIRouter
 
+from carp_fastapi.api.routers.home import carp_home
 from carp_fastapi.api.routers.auth import carp_auth, carp_users, carp_accounts
-from carp_fastapi.api.routers.services import carp_deployments, carp_studies, carp_monitor, carp_protocols, carp_summaries
+from carp_fastapi.api.routers.services import carp_deployments_datapoints_consents, carp_studies_collections_documents_files, carp_monitor, carp_protocols, carp_summaries
 
 # Routes
 router = APIRouter()
-
+# Home
+router.include_router(carp_home.router, tags=["home"])
 # Auth
 router.include_router(carp_auth.router, tags=["oauth"], prefix="/oauth")
 router.include_router(carp_users.router, tags=["users"], prefix="/api/users")
 router.include_router(carp_accounts.router, tags=["accounts"], prefix="/api/accounts")
-
 # Deployments, Data Points, and Consent Documents
-router.include_router(carp_deployments.router, tags=["api-deployments"], prefix="/api/deployments")
-
+router.include_router(carp_deployments_datapoints_consents.router, tags=["api-deployments"], prefix="/api/deployments")
 # Study, Collection, Documents, and File
-router.include_router(carp_studies.router, tags=["api-studies"], prefix="/api/studies")
-
+router.include_router(carp_studies_collections_documents_files.router, tags=["api-studies"], prefix="/api/studies")
 # Protocol
 router.include_router(carp_protocols.router, tags=["api-protocol"], prefix="/api/protocols")
-
 # Summaries
 router.include_router(carp_summaries.router, tags=["api-summaries"], prefix="/api/summaries")
-
 # Monitor
 router.include_router(carp_monitor.router, tags=["api-monitor"], prefix="/api")

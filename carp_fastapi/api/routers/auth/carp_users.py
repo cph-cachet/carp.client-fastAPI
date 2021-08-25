@@ -11,7 +11,15 @@ from fastapi import APIRouter, Request
 from carp import account_service as account
 from carp_fastapi.resources import carp_environment as env
 
+from starlette.config import Config
+config = Config(".env")
+environment: str = config("ENVIRONMENT", default="local")
+
 router = APIRouter()
+
+"""
+USER
+"""
 
 
 @router.get("/current")
@@ -21,7 +29,7 @@ async def current_user(request: Request):
     :return: The current user account information.
     """
     access_token = request.headers['authorization']
-    response = await account.current_user(env.BASE_URL["production"], access_token=access_token)
+    response = await account.current_user(env.BASE_URL[environment], access_token=access_token)
     return response
 
 
@@ -35,7 +43,7 @@ async def register_user(request: Request):
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
     access_token = request.headers['authorization']
-    response = await account.register_user(env.BASE_URL["production"],
+    response = await account.register_user(env.BASE_URL[environment],
                                            access_token=access_token,
                                            user_body=request_body)
     return response
@@ -51,7 +59,7 @@ async def send_forgotten_password_email(request: Request):
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
     access_token = request.headers['authorization']
-    response = await account.send_forgotten_password(env.BASE_URL["production"],
+    response = await account.send_forgotten_password(env.BASE_URL[environment],
                                                      access_token=access_token,
                                                      password_body=request_body)
     return response
@@ -67,7 +75,7 @@ async def send_new_password_for_token(request: Request):
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
     access_token = request.headers['authorization']
-    response = await account.send_new_password_for_token(env.BASE_URL["production"],
+    response = await account.send_new_password_for_token(env.BASE_URL[environment],
                                                          access_token=access_token,
                                                          password_body=request_body)
     return response
@@ -83,7 +91,7 @@ async def change_password(request: Request):
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
     access_token = request.headers['authorization']
-    response = await account.change_password(env.BASE_URL["production"],
+    response = await account.change_password(env.BASE_URL[environment],
                                              access_token=access_token,
                                              password_body=request_body)
     return response

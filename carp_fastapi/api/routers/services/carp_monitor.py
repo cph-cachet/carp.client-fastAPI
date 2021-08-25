@@ -12,6 +12,10 @@ from fastapi import APIRouter, Request
 from carp import monitor_service as monitor
 from carp_fastapi.resources import carp_environment as env
 
+from starlette.config import Config
+config = Config(".env")
+environment: str = config("ENVIRONMENT", default="local")
+
 router = APIRouter()
 
 """
@@ -26,7 +30,7 @@ async def get_instance_info(request: Request):
     :param request: The [request] header.
     :return: Overall instance information.
     """
-    response = await monitor.get_monitor_info(env.BASE_URL["production"],
+    response = await monitor.get_monitor_info(env.BASE_URL[environment],
                                               access_token=request.headers['authorization'])
     return response
 
@@ -38,7 +42,7 @@ async def get_git_info(request: Request):
     :param request: The [request] header.
     :return: The git commit information.
     """
-    response = await monitor.get_git_info(env.BASE_URL["production"],
+    response = await monitor.get_git_info(env.BASE_URL[environment],
                                           access_token=request.headers['authorization'])
     return response
 
@@ -50,7 +54,7 @@ async def get_flyway_info(request: Request):
     :param request: The [request] header.
     :return: The flyway information.
     """
-    response = await monitor.get_flyway_info(env.BASE_URL["production"],
+    response = await monitor.get_flyway_info(env.BASE_URL[environment],
                                              access_token=request.headers['authorization'])
     return response
 
@@ -62,7 +66,7 @@ async def get_health_info(request: Request):
     :param request: The [request] header.
     :return: Only health information.
     """
-    response = await monitor.get_health_info(env.BASE_URL["production"],
+    response = await monitor.get_health_info(env.BASE_URL[environment],
                                              access_token=request.headers['authorization'])
     return response
 
@@ -74,7 +78,7 @@ async def get_disk_space_info(request: Request):
     :param request: The [request] header.
     :return: The only disk space information.
     """
-    response = await monitor.get_disk_space_info(env.BASE_URL["production"],
+    response = await monitor.get_disk_space_info(env.BASE_URL[environment],
                                                  access_token=request.headers['authorization'])
     return response
 
@@ -86,7 +90,7 @@ async def get_db_info(request: Request):
     :param request: The [request] header.
     :return: The database information.
     """
-    response = await monitor.get_health_db_info(env.BASE_URL["production"],
+    response = await monitor.get_health_db_info(env.BASE_URL[environment],
                                                 access_token=request.headers['authorization'])
     return response
 
@@ -98,7 +102,7 @@ async def get_health_rabbitmq_info(request: Request):
     :param request: The [request] header.
     :return: The rabbitmq information.
     """
-    response = await monitor.get_health_rabbit_info(env.BASE_URL["production"],
+    response = await monitor.get_health_rabbit_info(env.BASE_URL[environment],
                                                     access_token=request.headers['authorization'])
     return response
 
@@ -110,7 +114,7 @@ async def get_health_ping_info(request: Request):
     :param request: The [request] header.
     :return: The ping health information.
     """
-    response = await monitor.get_ping_info(env.BASE_URL["production"],
+    response = await monitor.get_ping_info(env.BASE_URL[environment],
                                            access_token=request.headers['authorization'])
     return response
 
@@ -122,6 +126,6 @@ async def get_mail_server_info(request: Request):
     :param request: The [request] header.
     :return: The mail server health information.
     """
-    response = await monitor.get_mail_server_info(env.BASE_URL["production"],
+    response = await monitor.get_mail_server_info(env.BASE_URL[environment],
                                                   access_token=request.headers['authorization'])
     return response

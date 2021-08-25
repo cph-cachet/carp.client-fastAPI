@@ -12,10 +12,14 @@ from fastapi import APIRouter, Request
 from carp import datapoint_service as datapoint, consent_service as consent, deployment_service as deployment
 from carp_fastapi.resources import carp_environment as env
 
+from starlette.config import Config
+config = Config(".env")
+environment: str = config("ENVIRONMENT", default="local")
+
 router = APIRouter()
 
 """
-DATAPOINT :: CREATE :: GET :: DELETE
+DATA-POINTS :: CREATE :: GET :: DELETE
 """
 
 
@@ -29,7 +33,7 @@ async def create_data_point(request: Request, deployment_id: str):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await datapoint.create_data_point(env.BASE_URL["production"],
+    response = await datapoint.create_data_point(env.BASE_URL[environment],
                                                  access_token=request.headers['authorization'],
                                                  deployment_id=deployment_id,
                                                  data_points_body=request_body)
@@ -46,7 +50,7 @@ async def create_many_data_point(request: Request, deployment_id: str):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await datapoint.create_many_data_points(env.BASE_URL["production"],
+    response = await datapoint.create_many_data_points(env.BASE_URL[environment],
                                                        access_token=request.headers['authorization'],
                                                        deployment_id=deployment_id,
                                                        data_points_body=request_body)
@@ -62,7 +66,7 @@ async def get_one_data_point(request: Request, deployment_id: str, data_point_id
     :param data_point_id: The [data_point_id] assigned in the data point.
     :return: The data point by its [data_point_id] and [data_point_id].
     """
-    response = await datapoint.get_data_point(env.BASE_URL["production"],
+    response = await datapoint.get_data_point(env.BASE_URL[environment],
                                               access_token=request.headers['authorization'],
                                               deployment_id=deployment_id,
                                               data_point_id=data_point_id)
@@ -77,7 +81,7 @@ async def get_all_data_points(request: Request, deployment_id: str):
     :param deployment_id: The [deployment_id] assigned in the deployment.
     :return: The data points by their [deployment_id].
     """
-    response = await datapoint.get_all_data_points(env.BASE_URL["production"],
+    response = await datapoint.get_all_data_points(env.BASE_URL[environment],
                                                    access_token=request.headers['authorization'],
                                                    deployment_id=deployment_id)
     return response
@@ -92,7 +96,7 @@ async def get_all_data_points_pageable(request: Request, deployment_id: str, pag
     :param page_id: The [page_id] of the data point.
     :return: The data points by their [deployment_id] and [page_number].
     """
-    response = await datapoint.get_all_data_points_pageable(env.BASE_URL["production"],
+    response = await datapoint.get_all_data_points_pageable(env.BASE_URL[environment],
                                                             access_token=request.headers['authorization'],
                                                             deployment_id=deployment_id,
                                                             page=page_id)
@@ -108,7 +112,7 @@ async def get_all_data_points_sorted(request: Request, deployment_id: str, sort_
     :param sort_param: The [sort_param] parameter to order the data points (asc, desc).
     :return: The data points sorted by their [deployment_id] and the [sort_param] parameter.
     """
-    response = await datapoint.get_all_data_points_sorted(env.BASE_URL["production"],
+    response = await datapoint.get_all_data_points_sorted(env.BASE_URL[environment],
                                                           access_token=request.headers['authorization'],
                                                           deployment_id=deployment_id,
                                                           sort=sort_param)
@@ -124,7 +128,7 @@ async def get_all_data_points_with_query(request: Request, deployment_id: str, q
     :param query_param: The [query_param] parameters to retrieve the data point.
     :return: The data points by their [deployment_id] and the [query_param].
     """
-    response = await datapoint.get_all_nested_query(env.BASE_URL["production"],
+    response = await datapoint.get_all_nested_query(env.BASE_URL[environment],
                                                     access_token=request.headers['authorization'],
                                                     deployment_id=deployment_id,
                                                     query=query_param)
@@ -140,7 +144,7 @@ async def get_count_of_data_points(request: Request, deployment_id: str, query_p
     :param query_param: The [query_param] parameters to retrieve the data point.
     :return: The data points by their [deployment_id] and the [query] parameter.
     """
-    response = await datapoint.get_count_data_points(env.BASE_URL["production"],
+    response = await datapoint.get_count_data_points(env.BASE_URL[environment],
                                                      access_token=request.headers['authorization'],
                                                      deployment_id=deployment_id,
                                                      query=query_param)
@@ -156,7 +160,7 @@ async def delete_data_point(request: Request, deployment_id: str, data_point_id:
     :param data_point_id: The [data_point_id] assigned in the data point.
     :return: The [data_point_id] of the delete data point.
     """
-    response = await datapoint.delete_data_point(env.BASE_URL["production"],
+    response = await datapoint.delete_data_point(env.BASE_URL[environment],
                                                  access_token=request.headers['authorization'],
                                                  deployment_id=deployment_id,
                                                  data_point_id=data_point_id)
@@ -178,7 +182,7 @@ async def create_collection(request: Request, deployment_id: str):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await consent.create_consent(env.BASE_URL["production"],
+    response = await consent.create_consent(env.BASE_URL[environment],
                                             access_token=request.headers['authorization'],
                                             deployment_id=deployment_id,
                                             consent_body=request_body)
@@ -194,7 +198,7 @@ async def get_consent_document(request: Request, deployment_id: str, consent_id:
     :param consent_id: The [consent_id] of the consent document.
     :return: The consent document by its [deployment_id] and [consent_id].
     """
-    response = await consent.get_consent_document(env.BASE_URL["production"],
+    response = await consent.get_consent_document(env.BASE_URL[environment],
                                                   access_token=request.headers['authorization'],
                                                   deployment_id=deployment_id,
                                                   consent_id=consent_id)
@@ -209,7 +213,7 @@ async def get_all_consent_documents(request: Request, deployment_id: str):
     :param deployment_id: The [deployment_id] of the deployment.
     :return: The consent documents by its [deployment_id].
     """
-    response = await consent.get_all_consent_documents(env.BASE_URL["production"],
+    response = await consent.get_all_consent_documents(env.BASE_URL[environment],
                                                        access_token=request.headers['authorization'],
                                                        deployment_id=deployment_id)
     return response
@@ -224,7 +228,7 @@ async def delete_consent_document(request: Request, deployment_id: str, consent_
     :param consent_id: The [consent_id] of the consent document.
     :return: The deleted deployment.
     """
-    response = await consent.delete_consent(env.BASE_URL["production"],
+    response = await consent.delete_consent(env.BASE_URL[environment],
                                             access_token=request.headers['authorization'],
                                             deployment_id=deployment_id,
                                             consent_id=consent_id)
@@ -245,7 +249,7 @@ async def deployment_service(request: Request):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await deployment.deployment_service(env.BASE_URL["production"],
+    response = await deployment.deployment_service(env.BASE_URL[environment],
                                                    access_token=request.headers['authorization'],
                                                    deployment_body=request_body)
     return response
@@ -260,7 +264,7 @@ async def deployment_participation(request: Request):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await deployment.deployment_participation(env.BASE_URL["production"],
+    response = await deployment.deployment_participation(env.BASE_URL[environment],
                                                          access_token=request.headers['authorization'],
                                                          deployment_body=request_body)
     return response
@@ -274,7 +278,7 @@ async def deployment_statistics(request: Request):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await deployment.deployment_statistics(env.BASE_URL["production"],
+    response = await deployment.deployment_statistics(env.BASE_URL[environment],
                                                       access_token=request.headers['authorization'],
                                                       deployment_body=request_body)
     return response

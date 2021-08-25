@@ -13,10 +13,14 @@ from pydantic import BaseModel
 from carp import collection_service as collection, document_service as document, file_service as files, study_service as study
 from carp_fastapi.resources import carp_environment as env
 
+from starlette.config import Config
+config = Config(".env")
+environment: str = config("ENVIRONMENT", default="local")
+
 router = APIRouter()
 
 """
-COLLECTIONS :: CREATE :: GET :: DELETE
+COLLECTION :: CREATE :: GET :: DELETE
 """
 
 
@@ -32,7 +36,7 @@ async def create_collection(request: Request, study_id: str, collection_name: st
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await collection.create_collections(env.BASE_URL["production"],
+    response = await collection.create_collections(env.BASE_URL[environment],
                                                    access_token=request.headers['authorization'],
                                                    study_id=study_id,
                                                    collection_name=collection_name,
@@ -52,7 +56,7 @@ async def get_collection_by_collection_name_and_document_name(request: Request, 
     :param document_name: The [document_name] of the collection.
     :return: The collection by its [study_id], [collection_name], [document_name].
     """
-    response = await collection.get_collection_by_collection_name_and_document_name(env.BASE_URL["production"],
+    response = await collection.get_collection_by_collection_name_and_document_name(env.BASE_URL[environment],
                                                                                     access_token=request.headers['authorization'],
                                                                                     study_id=study_id,
                                                                                     collection_name=collection_name,
@@ -69,7 +73,7 @@ async def get_collection_nested_query(request: Request, study_id: str, query_par
     :param query_param: The [query_param] parameters to retrieve the collection.
     :return: The collection by its [study_id] and the [query] parameters.
     """
-    response = await collection.get_collection_with_nested_query(env.BASE_URL["production"],
+    response = await collection.get_collection_with_nested_query(env.BASE_URL[environment],
                                                                  access_token=request.headers['authorization'],
                                                                  study_id=study_id,
                                                                  query=query_param)
@@ -85,7 +89,7 @@ async def get_collection_by_study_id_and_collection_id(request: Request, study_i
     :param collection_id: The [collection_id] assigned in collection.
     :return: The collection by its [study_id] and [collection_id].
     """
-    response = await collection.get_collection_by_study_id_and_collection_id(env.BASE_URL["production"],
+    response = await collection.get_collection_by_study_id_and_collection_id(env.BASE_URL[environment],
                                                                              access_token=request.headers['authorization'],
                                                                              study_id=study_id,
                                                                              collection_id=collection_id)
@@ -101,7 +105,7 @@ async def update_collection_name_by_study_id_and_collection_id(request: Request,
     :param collection_id: The [collection_id] assigned in collection.
     :return: The updated collection by its [study_id] and [collection_id].
     """
-    response = await collection.update_collection_name(env.BASE_URL["production"],
+    response = await collection.update_collection_name(env.BASE_URL[environment],
                                                        access_token=request.headers['authorization'],
                                                        study_id=study_id,
                                                        collection_id=collection_id)
@@ -117,7 +121,7 @@ async def delete_collection_by_study_id_and_collection_id(request: Request, stud
     :param collection_id: The [collection_id] assigned in collection.
     :return: This request doesn't return a response request_body.
     """
-    response = await collection.delete_collection(env.BASE_URL["production"],
+    response = await collection.delete_collection(env.BASE_URL[environment],
                                                   access_token=request.headers['authorization'],
                                                   study_id=study_id,
                                                   collection_id=collection_id)
@@ -139,7 +143,7 @@ async def create_document(request: Request, study_id: str):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await document.create_documents(env.BASE_URL["production"],
+    response = await document.create_documents(env.BASE_URL[environment],
                                                access_token=request.headers['authorization'],
                                                study_id=study_id,
                                                document_body=request_body)
@@ -155,7 +159,7 @@ async def get_document(request: Request, study_id: str, document_id: str):
     :param document_id: The [document_id] assigned to the document.
     :return: The document by its [study_id] and [document_id].
     """
-    response = await document.get_document(env.BASE_URL["production"],
+    response = await document.get_document(env.BASE_URL[environment],
                                            access_token=request.headers['authorization'],
                                            study_id=study_id,
                                            document_id=document_id)
@@ -170,7 +174,7 @@ async def get_all_documents(request: Request, study_id: str):
     :param study_id: The [study_id] of the study deployment.
     :return: The documents requested by their [study_id].
     """
-    response = await document.get_all_documents(env.BASE_URL["production"],
+    response = await document.get_all_documents(env.BASE_URL[environment],
                                                 access_token=request.headers['authorization'],
                                                 study_id=study_id)
     return response
@@ -185,7 +189,7 @@ async def get_all_documents_sorted(request: Request, study_id: str, sort_param: 
     :param sort_param: The [sort_param] parameter to sort the document (asc, desc).
     :return: The documents by their [study_id] and [sort].
     """
-    response = await document.get_all_documents_sorted(env.BASE_URL["production"],
+    response = await document.get_all_documents_sorted(env.BASE_URL[environment],
                                                        access_token=request.headers['authorization'],
                                                        study_id=study_id,
                                                        sort=sort_param)
@@ -201,7 +205,7 @@ async def get_all_documents_by_query(request: Request, study_id: str, query_para
     :param query_param: The [query_param] parameters to retrieve the document.
     :return: The documents by their [study_id] and the [query] parameters.
     """
-    response = await document.get_all_documents_query(env.BASE_URL["production"],
+    response = await document.get_all_documents_query(env.BASE_URL[environment],
                                                       access_token=request.headers['authorization'],
                                                       study_id=study_id,
                                                       query=query_param)
@@ -219,7 +223,7 @@ async def update_documents(request: Request, study_id: str, document_id: str):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await document.update_documents(env.BASE_URL["production"],
+    response = await document.update_documents(env.BASE_URL[environment],
                                                access_token=request.headers['authorization'],
                                                study_id=study_id,
                                                document_id=document_id,
@@ -238,7 +242,7 @@ async def append_documents(request: Request, study_id: str, document_id: str):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await document.append_documents(env.BASE_URL["production"],
+    response = await document.append_documents(env.BASE_URL[environment],
                                                access_token=request.headers['authorization'],
                                                study_id=study_id,
                                                document_id=document_id,
@@ -255,7 +259,7 @@ async def delete_documents(request: Request, study_id: str, document_id: str):
     :param document_id: The [document_id] assigned to the document.
     :return: The [document_id] of the delete document.
     """
-    response = await document.delete_document(env.BASE_URL["production"],
+    response = await document.delete_document(env.BASE_URL[environment],
                                               access_token=request.headers['authorization'],
                                               study_id=study_id,
                                               document_id=document_id)
@@ -281,7 +285,7 @@ async def upload_file(request: Request, study_id: str, metadata: Metadata, file:
     :param study_id: The [study_id] assigned to the file to the study deployment.
     :return: The uploaded file with a given [file_id].
     """
-    response = await files.upload_file(env.BASE_URL["production"],
+    response = await files.upload_file(env.BASE_URL[environment],
                                        access_token=request.headers['authorization'],
                                        file_to_upload=file,
                                        study_id=study_id,
@@ -298,7 +302,7 @@ async def download_file(request: Request, study_id: str, file_id: str):
     :param file_id: The [file_id] assigned to the file.
     :return: The downloaded file.
     """
-    response = await files.download_file(env.BASE_URL["production"],
+    response = await files.download_file(env.BASE_URL[environment],
                                          access_token=request.headers['authorization'],
                                          study_id=study_id,
                                          file_id=file_id)
@@ -314,7 +318,7 @@ async def get_file(request: Request, study_id: str, file_id: str):
     :param file_id: The [file_id] assigned to the file.
     :return: Retrieve the existing file.
     """
-    response = await files.get_file(env.BASE_URL["production"],
+    response = await files.get_file(env.BASE_URL[environment],
                                     access_token=request.headers['authorization'],
                                     study_id=study_id,
                                     file_id=file_id)
@@ -329,7 +333,7 @@ async def get_all_files(request: Request, study_id: str):
     :param study_id: The [study_id] assigned to the file to the study deployment.
     :return: Retrieve the existing file.
     """
-    response = await files.get_all(env.BASE_URL["production"],
+    response = await files.get_all(env.BASE_URL[environment],
                                    access_token=request.headers['authorization'],
                                    study_id=study_id)
     return response
@@ -344,7 +348,7 @@ async def get_files_by_nested_query(request: Request, study_id: str, meta_data_q
     :param meta_data_query: The [meta_data_query] parameters to retrieve a file.
     :return: The file by their [study_id] and the [meta_data_query] parameter(s).
     """
-    response = await files.get_files_nested_query(env.BASE_URL["production"],
+    response = await files.get_files_nested_query(env.BASE_URL[environment],
                                                   access_token=request.headers['authorization'],
                                                   study_id=study_id,
                                                   query=meta_data_query)
@@ -360,7 +364,7 @@ async def delete_file(request: Request, study_id: str, file_id: str):
     :param file_id: The [file_id] assigned to the file.
     :return: The [file_id] of the deleted file.
     """
-    response = await files.delete_file(env.BASE_URL["production"],
+    response = await files.delete_file(env.BASE_URL[environment],
                                        access_token=request.headers['authorization'],
                                        study_id=study_id,
                                        file_id=file_id)
@@ -382,7 +386,7 @@ async def add_researcher(request: Request, study_id: str):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await study.add_researcher(env.BASE_URL["production"],
+    response = await study.add_researcher(env.BASE_URL[environment],
                                           access_token=request.headers['authorization'],
                                           study_id=study_id,
                                           researcher_body=request_body)
@@ -398,9 +402,9 @@ async def study_service(request: Request):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await study.study_service(env.BASE_URL["production"],
+    response = await study.study_service(env.BASE_URL[environment],
                                          access_token=request.headers['authorization'],
-                                         participant_body=request_body)
+                                         study_body=request_body)
     return response
 
 
@@ -413,7 +417,7 @@ async def participant_service(request: Request):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await study.participant_service(env.BASE_URL["production"],
+    response = await study.participant_service(env.BASE_URL[environment],
                                                access_token=request.headers['authorization'],
                                                participant_body=request_body)
     return response
@@ -427,7 +431,7 @@ async def get_participants_info(request: Request, study_id: str):
     :param study_id: The [study_id] assigned to the file to the study deployment.
     :return: The files by their [study_id] and the [query] parameter(s).
     """
-    response = await study.get_participants_info(env.BASE_URL["production"],
+    response = await study.get_participants_info(env.BASE_URL[environment],
                                                  access_token=request.headers['authorization'],
                                                  study_id=study_id)
     return response

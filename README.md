@@ -16,7 +16,7 @@ Environments
 
 > Changing the **[CARP]** environment: 
 >  - replace the environment in the following directory: `carp_fastapi.api.services`
->  - *env.BASE_URL["production"]; env.BASE_URL["staging"]; env.BASE_URL["development"]; env.BASE_URL["test"]; env.BASE_URL["local"]..*
+>  - *env.BASE_URL[environment]; env.BASE_URL["staging"]; env.BASE_URL["development"]; env.BASE_URL["test"]; env.BASE_URL["local"]..*
 
 
 Install requirements
@@ -28,7 +28,7 @@ Install requirements
  
 **Run locally:**
 >  - ~`cd` into `carp.client-fastapi` directory and use the command: 
->  - uvicorn run:app --reload
+>  - uvicorn run:app --reload --port 8091
 
          
 References

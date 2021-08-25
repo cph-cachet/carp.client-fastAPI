@@ -23,4 +23,4 @@ ADD . /carp_fastapi
 
 COPY . /carp_fastapi
 
-CMD ["uvicorn", "run:app", "--host", "0.0.0.0", "--reload", "--port", "8000"]
+CMD ["uvicorn", "run:app", "--host", "0.0.0.0", "--reload", "--port", "8091"]

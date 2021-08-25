@@ -12,7 +12,7 @@ from setuptools import setup
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-with open("README.md", "r", encoding="utf-8") as fh:
+with open("requirements.txt", "r", encoding="utf-8") as fh:
     requirements_list = fh.read()
 
 

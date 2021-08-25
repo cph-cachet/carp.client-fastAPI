@@ -12,8 +12,11 @@ from fastapi import APIRouter, Request
 from carp import protocol_service as protocol
 from carp_fastapi.resources import carp_environment as env
 
-router = APIRouter()
+from starlette.config import Config
+config = Config(".env")
+environment: str = config("ENVIRONMENT", default="local")
 
+router = APIRouter()
 
 """
 PROTOCOLS :: CREATE :: GET
@@ -29,7 +32,7 @@ async def protocol_service(request: Request):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await protocol.protocol_service(env.BASE_URL["production"],
+    response = await protocol.protocol_service(env.BASE_URL[environment],
                                                access_token=request.headers['authorization'],
                                                protocol_body=request_body)
     return response
@@ -44,7 +47,7 @@ async def protocol_factory_service(request: Request):
     """
     body: bytes = await request.body()
     request_body: str = bytes.decode(body)
-    response = await protocol.protocol_factory_service(env.BASE_URL["production"],
+    response = await protocol.protocol_factory_service(env.BASE_URL[environment],
                                                        access_token=request.headers['authorization'],
                                                        protocol_body=request_body)
     return response
