@@ -15,8 +15,8 @@ Environments
 -----------------
 
 > Changing the **[CARP]** environment: 
->  - replace the environment in the following directory: `carp_fastapi.api.services`
->  - *env.BASE_URL[environment]; env.BASE_URL["staging"]; env.BASE_URL["development"]; env.BASE_URL["test"]; env.BASE_URL["local"]..*
+>  - replace the environment in the following file: `.env`
+>  - i.e.: ENVIRONMENT=production, ENVIRONMENT=development, ENVIRONMENT=staging, ENVIRONMENT=test, ENVIRONMENT=local, `default`=local
 
 
 Install requirements
