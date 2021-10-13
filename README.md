@@ -16,7 +16,7 @@ Environments
 
 > Changing the **[CARP]** environment: 
 >  - replace the environment in the following file: `.env`
->  - i.e.: ENVIRONMENT=production, ENVIRONMENT=development, ENVIRONMENT=staging, ENVIRONMENT=test, ENVIRONMENT=local, `default`=local
+>  - i.e.: ENVIRONMENT=`production`, ENVIRONMENT=`development`, ENVIRONMENT=`staging`, ENVIRONMENT=`test`, ENVIRONMENT=`local`, default=`local`
 
 
 Install requirements

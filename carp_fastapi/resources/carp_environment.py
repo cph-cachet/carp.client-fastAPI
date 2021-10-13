@@ -14,7 +14,7 @@ THE SOFTWARE IS PROVIDED ”AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 # BASE URL
 BASE_URL = {
     # Local
-    "local": "http://localhost:8080",
+    "local": "http://localhost:8091",
     # Server
     "test": "https://cans.cachet.dk:443/test",
     "development": "https://cans.cachet.dk:443/dev",

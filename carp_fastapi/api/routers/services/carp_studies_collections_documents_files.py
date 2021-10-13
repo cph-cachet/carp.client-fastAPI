@@ -10,10 +10,12 @@ THE SOFTWARE IS PROVIDED ”AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 from fastapi import APIRouter, Request, File, UploadFile
 from pydantic import BaseModel
 
-from carp import collection_service as collection, document_service as document, file_service as files, study_service as study
+from carp import collection_service as collection, document_service as document, file_service as files, \
+    study_service as study
 from carp_fastapi.resources import carp_environment as env
 
 from starlette.config import Config
+
 config = Config(".env")
 environment: str = config("ENVIRONMENT", default="local")
 
@@ -57,7 +59,8 @@ async def get_collection_by_collection_name_and_document_name(request: Request, 
     :return: The collection by its [study_id], [collection_name], [document_name].
     """
     response = await collection.get_collection_by_collection_name_and_document_name(env.BASE_URL[environment],
-                                                                                    access_token=request.headers['authorization'],
+                                                                                    access_token=request.headers[
+                                                                                        'authorization'],
                                                                                     study_id=study_id,
                                                                                     collection_name=collection_name,
                                                                                     document_name=document_name)
@@ -81,6 +84,22 @@ async def get_collection_nested_query(request: Request, study_id: str, query_par
 
 
 @router.get('/{study_id}/collections/id/{collection_id}')
+async def get_collection_by_study_id_and_collection_name(request: Request, study_id: str, collection_name: str):
+    """
+    Endpoint: [get_collection_by_collection_id]
+    :param request: The [request] header.
+    :param study_id: The [study_id] of the study deployment.
+    :param collection_name: The [collection_name] assigned in collection.
+    :return: The collection by its [study_id] and [collection_id].
+    """
+    response = await collection.get_collection_by_study_id_and_collection_name(env.BASE_URL[environment],
+                                                                               access_token=request.headers['authorization'],
+                                                                               study_id=study_id,
+                                                                               collection_name=collection_name)
+    return response
+
+
+@router.get('/{study_id}/collections/id/{collection_id}')
 async def get_collection_by_study_id_and_collection_id(request: Request, study_id: str, collection_id: str):
     """
     Endpoint: [get_collection_by_collection_id]
@@ -90,7 +109,8 @@ async def get_collection_by_study_id_and_collection_id(request: Request, study_i
     :return: The collection by its [study_id] and [collection_id].
     """
     response = await collection.get_collection_by_study_id_and_collection_id(env.BASE_URL[environment],
-                                                                             access_token=request.headers['authorization'],
+                                                                             access_token=request.headers[
+                                                                                 'authorization'],
                                                                              study_id=study_id,
                                                                              collection_id=collection_id)
     return response
@@ -435,4 +455,3 @@ async def get_participants_info(request: Request, study_id: str):
                                                  access_token=request.headers['authorization'],
                                                  study_id=study_id)
     return response
-

@@ -13,6 +13,7 @@ from carp_fastapi.resources import carp_environment as env
 from carp import account_service as accounts
 
 from starlette.config import Config
+
 config = Config(".env")
 environment: str = config("ENVIRONMENT", default="local")
 
@@ -21,6 +22,7 @@ router = APIRouter()
 """
 AUTHENTICATION | AUTHORIZATION
 """
+
 
 @router.post("/token")
 async def login(request: Request):
@@ -44,4 +46,3 @@ async def refresh_token(request: Request):
     request_body: str = bytes.decode(body)
     response = await accounts.refresh_token(env.BASE_URL[environment], token=request_body)
     return response
-
